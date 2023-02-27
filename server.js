@@ -85,6 +85,7 @@ verifyUser(req, async (err, user) => {
 */
 
 async function getCats(request, response) {
+  console.log('!!!!!!',request);
   verifyUser(request, async (err, user) => {
     if (err) {
       console.error(err);
@@ -92,11 +93,11 @@ async function getCats(request, response) {
     } else {
       try {
         let catResults = await Cat.find();
-        console.log(catResults);
+        // console.log(catResults);
         response.status(200).send(catResults);
       } catch (err) {
         console.error(err);
-        res.status(500).send("server error");
+        response.status(500).send("server error");
       }
     }
   });

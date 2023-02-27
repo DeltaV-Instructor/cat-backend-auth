@@ -27,7 +27,7 @@ function getKey(header, callback){
 function verifyUser(req, errorFirstOrUseTheCallBackFunction){
   try {
     const token = req.headers.authorization.spilt(' ')[1];
-    console.log(token);
+    console.log('toookein',token);
     jwt.verify(token, getKey, {},errorFirstOrUseTheCallBackFunction);
   } catch (error) {
     errorFirstOrUseTheCallBackFunction('not authorized, today.');
