@@ -2,12 +2,12 @@
 console.log("SERVER UP!");
 
 
-const verifyUser = require('./auth.js');
+
 
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
+const verifyUser = require('./auth.js');
 const app = express();
 
 app.use(cors());
