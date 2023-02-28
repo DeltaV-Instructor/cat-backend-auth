@@ -19,7 +19,8 @@ const catSchema = new Schema({
   name: {type: String, require: true},
   color:{type: String , require: true},
   spayNeuter:{type: Boolean, require: true},
-  location:{type: String, require: true}
+  location:{type: String, require: true},
+  email: String
 });
 
 //Define our model

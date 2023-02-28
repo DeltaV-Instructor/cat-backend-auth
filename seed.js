@@ -18,6 +18,7 @@ async function seed() {
     color: "Black and White and Orange",
     spayNeuter: false,
     location: "Nevada",
+    email: 'craig@iowastartupaccelerator.com'
   });
   console.log("Big Cat!!");
   await Cat.create({
@@ -25,6 +26,7 @@ async function seed() {
     color: "Grey and white",
     spayNeuter: true,
     location: "Alley ways",
+    email: 'craig@iowastartupaccelerator.com'
   });
   console.log("Tom Cat");
   await Cat.create({
@@ -32,6 +34,7 @@ async function seed() {
     color: "Hot Pink and Purps",
     spayNeuter: false,
     location: "Mid West Side",
+    email: 'craig@iowastartupaccelerator.com'
   });
   console.log("Lil Meow Now.");
 

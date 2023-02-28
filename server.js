@@ -1,21 +1,18 @@
 "use strict";
 console.log("SERVER UP!");
 
-
-
-
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const verifyUser = require('./auth.js');
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-const PORT = process.env.PORT || 5005;
-
 const mongoose = require("mongoose");
 const Cat = require("./models/cats.js");
+const verifyUser = require("./auth.js");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const PORT = process.env.PORT || 5005;
 mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
@@ -27,110 +24,40 @@ db.once("open", function () {
 app.get("/", (req, res) => {
   res.status(200).send("Hello from Saturdays!");
 });
+
+app.use(verifyUser);
+
 app.get("/cats", getCats);
 app.post("/cats", postCats);
 app.delete("/cats/:id", deleteCats);
 app.put("/cats/:id", updateCats);
 
 async function updateCats(request, response, error) {
-  // console.log('id', request.params.id);
-  //update data live in the body of the request object
   let id = request.params.id;
   let catData = request.body;
-  //  console.log(id, catData);
   try {
-    //findByIdAndUpdate() method take in 3 arguments
-    //1. id of the thing we want to update
-    //2. updated data object
-    //3. options object, makes it a put and not a patch
     let updatedCat = await Cat.findByIdAndUpdate(id, catData, {
       new: true,
       overwrite: true,
     });
-    console.log("🚀 ~ !!!!!!!!", updatedCat);
-
     response.status(200).send(updatedCat);
   } catch (error) {
     next(error);
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// to use verification functionality, paste your existing code inside of this function:
-/*
-verifyUser(req, async (err, user) => {
-  if (err) {
-    console.error(err);
-    res.send('invalid token');
-  } else {
-    // insert try catch logic here.  BE CAREFUL.  check syntax IMMEDIATELY
-  }
-});
-*/
-
 async function getCats(request, response) {
-  console.log('!!!!!!',request);
-  verifyUser(request, async (err, user) => {
-    if (err) {
-      console.error(err);
-      response.send("invalid token");
-    } else {
-      try {
-        let catResults = await Cat.find();
-        // console.log(catResults);
-        response.status(200).send(catResults);
-      } catch (err) {
-        console.error(err);
-        response.status(500).send("server error");
-      }
-    }
-  });
+  try {
+    let catResults = await Cat.find({ email: request.user.email });
+    // console.log(catResults);
+    response.status(200).send(catResults);
+  } catch (err) {
+    console.error(err);
+    response.status(500).send("server error");
+  }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 async function postCats(request, response, next) {
-  //http://localhost:3002/cats    then add the json parse
-  console.log(request.body);
   try {
     let createCat = await Cat.create(request.body);
     response.status(200).send(createCat);
@@ -140,12 +67,8 @@ async function postCats(request, response, next) {
 }
 
 async function deleteCats(request, response, next) {
-  //http:localhost:3002/cats/63ebfe8d317e5dfe439030e7
-  console.log("id", request.params.id);
-
   let id = request.params.id;
   try {
-    //here we would think about is our user validated/authorize to delete
     await Cat.findByIdAndDelete(id);
     response.status(200).send("Cat Deleted");
   } catch (error) {
