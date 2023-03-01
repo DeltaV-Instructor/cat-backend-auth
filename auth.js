@@ -16,8 +16,7 @@ function verifyUser(request, response, next) {
     request.user = user;
     next();
   }
-
-  try {
+  try {                                     //`Bearer token`
     const token = request.headers.authorization.split(' ')[1];
     // this console allows me to grab the token so I can use it to test it in ThunderClient
     // make a request from the client-side, get my token back, then test it in ThunderClient
